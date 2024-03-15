@@ -4,7 +4,12 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "server": "nodemon server.js --ignore client"
+        "start:dev": "concurrently \"cd client && npm run build\" \"cd server && npm run server\" ",
+        "start": "npm run build && cd server && node server.js",
+        "server": "cd server node server.js --ignore client",
+        "build": "cd client && npm run build",
+        "install": "cd server && npm i && cd ../client && npm i",
+        "client": "cd client && npm start"
     },
     "keywords": [],
     "author": "",
@@ -13,6 +18,7 @@
         "express": "^4.17.1"
     },
     "devDependencies": {
+        "concurrently": "^5.2.0",
         "nodemon": "^2.0.4"
     }
 }
