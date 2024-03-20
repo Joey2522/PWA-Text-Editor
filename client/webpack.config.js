@@ -27,10 +27,26 @@ module.exports = () => {
 
       new MiniCssExtractPlugin(),
 
-      new WorkboxPlugin.GenerateSW(),
+      new WorkboxPlugin.GenerateSW({
+        exclude: [/\.(?:png|jpg|jpeg|svg)$/],
+
+        runtimeCaching: [{
+          urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
+  
+          handler: 'CacheFirst',
+  
+          options: {
+            cacheName: 'images',
+  
+            expiration: {
+              maxEntries: 2,
+            },
+          },
+        }],
+      }),
 
       new WebpackPwaManifest({
-        // TODO: Create a manifest.json:
+        
         name: 'Text_Editor',
         short_name: 'TE',
         description: 'Editing Text',
@@ -42,14 +58,9 @@ module.exports = () => {
           {
             src: path.resolve('./favicon.ico'),
             sizes: [96],
-            // destination: path.join('client', 'icons'),
           },
         ],
       }),
-      // new InjectManifest({
-      //   swSrc: './src/sw.js',
-      //   swDest:'service-worker.js',
-      // })
     ],
 
     module: {
@@ -69,6 +80,7 @@ module.exports = () => {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/transform-runtime'],
             },
           },
         },
